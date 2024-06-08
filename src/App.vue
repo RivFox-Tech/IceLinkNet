@@ -16,7 +16,7 @@
                         </n-icon>
                       </template>
                     </n-button>
-                    <n-button style="margin-right: -2px" :focusable="false" @click="maximize" class="draggable-button" text>
+                    <n-button style="margin-right: -2px;" :focusable="false" @click="maximize" class="draggable-button" text>
                       <template #icon>
                         <n-icon>
                           <StopOutline style="font-size: 18px; margin-top: 1px;"/>
@@ -47,7 +47,7 @@
                       :collapsed-icon-size="20"
                       responsive
                       :options="menu"
-                      @update:value="footerValue = ''"
+                      @update:value="footerValue = '' "
                   />
                   <n-menu
                       style="bottom: 0; position: fixed; width: 60px; margin-bottom: 3px"
@@ -74,21 +74,21 @@
 
 <script setup lang="ts">
 import {darkTheme, type MenuOption} from "naive-ui";
-import {RemoveOutline, StopOutline, CloseOutline} from "@vicons/ionicons5"
+import {
+  CloseOutline,
+  ExtensionPuzzleOutline,
+  GridOutline,
+  HomeOutline,
+  MenuOutline,
+  PersonCircleOutline,
+  RemoveOutline,
+  SettingsOutline,
+  StopOutline
+} from "@vicons/ionicons5"
 import {h, ref} from "vue";
 import {RouterLink, useRouter} from "vue-router";
 import {ipcRenderer} from "electron";
 import PubSub from "pubsub-js";
-import {
-  // Menu
-  HomeOutline,
-  GridOutline,
-  MenuOutline,
-  ExtensionPuzzleOutline,
-  // Footer
-  PersonCircleOutline,
-  SettingsOutline
-} from "@vicons/ionicons5";
 import icon from "./services/icon.ts";
 
 const themeOverrides = {

@@ -1,11 +1,11 @@
-import {app, BrowserWindow, Menu, Tray} from "electron";
+import {app, BrowserWindow, ipcMain, Menu, Tray} from "electron";
 import {fileURLToPath} from "node:url";
 import path from "node:path";
-import {ipcMain} from "electron";
-import express from 'express';
-import bodyParser from 'body-parser';
+import express from "express";
+import bodyParser from "body-parser";
 import Notice from "../src/services/notice.ts";
-import PubSub from "pubsub-js";
+import axios from "axios";
+import * as fs from "node:fs";
 
 // 一堆神奇的初始化
 
@@ -22,7 +22,7 @@ let win: BrowserWindow | null;
 function createWindow() {
     win = new BrowserWindow({
         title: "MoonNetwork",
-        icon: path.join(process.env.VITE_PUBLIC, "logo.png"),
+        icon: path.join(process.env.VITE_PUBLIC, "logo.ico"),
         webPreferences: {
             preload: path.join(__dirname, "preload.mjs"),
             nodeIntegration: true,
@@ -40,7 +40,7 @@ function createWindow() {
         win?.webContents.send("main-process-message", (new Date).toLocaleString());
     })
     win.webContents.openDevTools();
-
+    
     if (VITE_DEV_SERVER_URL) {
         win.loadURL!(VITE_DEV_SERVER_URL);
         webapi();
@@ -48,10 +48,34 @@ function createWindow() {
         win.loadFile!(path.join(RENDERER_DIST, "index.html"));
         webapi();
     }
+
+    ipcMain.handle("downloadFile", async (event, downloadUrl, savePath) => {
+        const writer = fs.createWriteStream(savePath);
+        const response = await axios({
+            url: downloadUrl,
+            method: "GET",
+            responseType: "stream",
+        });
+
+        const totalLength = response.headers["content-length"];
+        let downloadedLength = 0;
+
+        response.data.on("data", (chunk: any) => {
+            downloadedLength += chunk.length;
+            const progress = (downloadedLength / totalLength) * 100;
+            if(win) win.webContents.send("downloadProgress", progress);
+        });
+
+        response.data.pipe(writer);
+
+        return new Promise((resolve, reject) => {
+            writer.on("finish", () => resolve(savePath));
+            writer.on("error", reject);
+        });
+    });
 }
 
 // 三大金刚 - 最小化、最大化、关闭
-
 ipcMain.on("minimize", () => {
     const win = BrowserWindow.getFocusedWindow();
     if (win) {
@@ -71,7 +95,13 @@ ipcMain.on("maximize", () => {
 ipcMain.on("close", () => {
     const win = BrowserWindow.getFocusedWindow();
     if (win) {
-        win.close();
+        const settingPath = path.join(process.cwd(), "data/setting.json");
+        const data = JSON.parse(fs.readFileSync(settingPath, "utf-8"));
+        if (data.tray === 0) {
+            win.hide();
+        } else {
+            win.close();
+        }
     }
 });
 
@@ -107,9 +137,8 @@ app.whenReady().then(() => {
 })
 
 // 应用 WEBAPI 服务
-
 function webapi() {
-    const api_status = true;
+    const api_status = false;
 
     if (api_status) {
         const api = express();
@@ -125,12 +154,12 @@ function webapi() {
 
         api.post("/api/tunnel", (req, res) => {
             const data = req.body;
-            console.log('收到的数据:', data);
-            res.json({message: '数据已接收', data});
+            console.log("收到的数据:", data);
+            res.json({message: "数据已接收", data});
         });
 
         api.listen(port, () => {
-            Notice.win("已启动 WEBAPI 服务, 注意保管 Authorization, 不提示此通知可在设置关闭");
+            Notice.win("WEBAPI", "已启动 WEBAPI 服务, 注意保管 Authorization, 不提示此通知可在设置关闭");
         });
     }
 }

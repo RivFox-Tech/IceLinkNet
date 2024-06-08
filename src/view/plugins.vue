@@ -41,6 +41,4 @@
 
 <script setup lang="ts">
 import {AddOutline, RefreshOutline} from "@vicons/ionicons5";
-
-
 </script>

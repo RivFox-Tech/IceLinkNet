@@ -1,0 +1,12 @@
+{
+  "help": "https://learn.rivfox.com/docs/moonnetwork/client",
+  "theme": "dark",
+  "color": {
+    "primaryColor": "#70c0e8",
+    "primaryColorHover": "#8acbec",
+    "primaryColorPressed": "#66AFD3FF",
+    "primaryColorSuppl": "rgb(56, 137, 197)"
+  },
+  "notice": 0,
+  "tray": 0
+}

@@ -9,7 +9,7 @@
         <n-select style="width: 180px;" :options="[
           { label: '浅色', value: 'light' },
           { label: '深色', value: 'dark' },
-        ]" placeholder="主题色" @update:value="theme_switching"/>
+        ]" placeholder="主题" @update:value="theme_switching"/>
       </template>
     </n-card>
     <n-card size="small">
@@ -31,7 +31,7 @@
           { label: '仅应用', value: '1' },
           { label: '仅系统', value: '2' },
           { label: '关闭通知', value: '3' },
-        ]" placeholder="主题色" @update:value="theme_switching"/>
+        ]" placeholder="通知" @update:value="theme_switching"/>
       </template>
     </n-card>
     <n-card size="small">
@@ -40,11 +40,9 @@
       </template>
       <template #header-extra>
         <n-select style="width: 180px;" :options="[
-          { label: '应用与系统', value: '0' },
-          { label: '仅应用', value: '1' },
-          { label: '仅系统', value: '2' },
-          { label: '关闭通知', value: '3' },
-        ]" placeholder="主题色" @update:value="theme_switching"/>
+          { label: '显示', value: '0' },
+          { label: '隐藏(直接退出)', value: '1' }
+        ]" placeholder="托盘" @update:value="theme_switching"/>
       </template>
     </n-card>
     <span v-show="false" style="font-size: 18px; font-weight: bold; margin-top: 8px; margin-bottom: 5px;">高级</span>
@@ -77,16 +75,16 @@
         <p style="margin-bottom: 4px; margin-top: 5px">开源软件使用</p>
       </template>
       <template #header-extra>
-        <n-button>瞅瞅</n-button>
+        <n-button>打开</n-button>
       </template>
     </n-card>
   </n-flex>
 </template>
 
 <script setup lang="ts">
-import {
-  SettingsOutline
-} from "@vicons/ionicons5";
+import {SettingsOutline} from "@vicons/ionicons5";
+
+const data = "";
 
 function theme_switching(value: string) {
   PubSub.publish("theme", value);
