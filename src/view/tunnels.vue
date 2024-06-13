@@ -36,16 +36,30 @@
     </n-layout-header>
     <n-layout ref="contentRef" :native-scrollbar="false" position="absolute" style="top: 64px;">
       <!--数据展示-->
-      <n-list v-show="!loading" style="margin-top: 10px" hoverable clickable>
+      <div v-if="IsNull(local.tunnel.source)" v-show="!loading">
+        <h3 style="margin-top: 23%; text-align: center">这什么也没有, 创建一个隧道?</h3>
+      </div>
+      <n-list v-else v-show="!loading" style="margin-top: 10px" hoverable clickable>
         <n-list-item
             v-for="(item) in local.tunnel.source"
             :key="item"
             @click="selectTunnel(item)">
           <div>
             {{ item.tunnelName }} <span style="opacity: 0.5">#{{ item.tunnelId }}</span>
-            <n-tag type="success" size="small" style="float: right">NB666</n-tag>
+            <n-tag :type="item.available ? 'success' : 'error'"
+                   size="small"
+                   style="float: right; cursor: pointer">
+              {{ item.available ? "启用" : "禁用" }}
+            </n-tag>
+            <n-tag :type="item.initiate ? 'success' : 'error'"
+                   size="small"
+                   style="float: right; cursor: pointer; margin-right: 5px">
+              {{ item.initiate ? "启动" : "关闭" }}
+            </n-tag>
           </div>
-          <span style="opacity: 0.5">{{ item.tunnelType.toUpperCase() }} {{ item.localIp }}:{{ item.localPort }} == {{ item.remotePort }}</span>
+          <span style="opacity: 0.5">{{ item.tunnelType.toUpperCase() }} {{ item.localIp }}:{{
+              item.localPort
+            }} == {{ item.remotePort }}</span>
         </n-list-item>
       </n-list>
       <!--Loading-->
@@ -128,9 +142,23 @@
       </n-scrollbar>
       <template #footer>
         <n-space>
-          <n-button ghost type="error">删除</n-button>
-          <n-button>启动</n-button>
-          <n-button>保存</n-button>
+          <n-button @click="deleteLocalTunnelClick(local.tunnel.args.tunnelId)"
+                    ghost
+                    type="error">
+            删除
+          </n-button>
+          <n-button @click="availableLocalTunnelClick(local.tunnel.args.tunnelId, local.tunnel.args.available)"
+                    ghost
+                    :type="local.tunnel.args.available ? 'error' : 'success'">
+            {{ local.tunnel.args.available ? "禁用" : "启用" }}
+          </n-button>
+          <n-button @click="initiateLocalTunnelClick(local.tunnel.args.tunnelId, local.tunnel.args.initiate)"
+                    :disabled="!local.tunnel.args.available"
+                    ghost
+                    :type="local.tunnel.args.initiate ? 'error' : 'success'">
+            {{ local.tunnel.args.initiate ? "关闭" : "启动" }}
+          </n-button>
+          <n-button ghost>保存</n-button>
         </n-space>
       </template>
     </n-drawer-content>
@@ -140,7 +168,10 @@
             v-model:show="local.tunnel.show"
             :width="520">
     <n-drawer-content closable title="创建本地隧道">
-      <n-scrollbar>
+      <div v-if="IsNull(local.node.source)" v-show="!loading">
+        <h3 style="margin-top: 50%; text-align: center">这什么也没有, 创建一个节点?</h3>
+      </div>
+      <n-scrollbar v-else>
         <n-tabs v-model:value="local.tunnel.tabs">
           <n-tab-pane name="node" tab="节点">
             <n-list style="margin-top: 10px" hoverable clickable>
@@ -283,14 +314,16 @@ import {h, ref} from "vue";
 import {NIcon, useMessage} from "naive-ui";
 import fs from "node:fs";
 import path from "node:path";
+import IsNull from "../services/isNull.ts";
 
+const localTunnelDataPath = path.join(process.cwd(), "data/tunnel.json");
 const message = useMessage();
 const loading = ref(true);
 const local = ref({
   tunnel: {
     tabs: "node",
     show: false,
-    source: JSON.parse(fs.readFileSync(path.join(process.cwd(), "data/tunnel.json"), "utf-8")).tunnels,
+    source: JSON.parse(fs.readFileSync(localTunnelDataPath, "utf-8")).tunnels,
     options: [
       {
         label: '本地',
@@ -339,7 +372,9 @@ const local = ref({
       localIp: "",
       localPort: "",
       remotePort: "",
-      user: ""
+      user: "",
+      available: true,
+      initiate: false
     }
   },
   node: {
@@ -382,6 +417,7 @@ const tunnelType = ref([
 
 // 获取本地隧道
 getLocalTunnel();
+
 function getLocalTunnel() {
   loading.value = true;
   local.value.tunnel.source =
@@ -410,7 +446,9 @@ function showLocalTunnelClick(key: string) {
       localIp: "",
       localPort: "",
       remotePort: "",
-      user: ""
+      user: "",
+      available: true,
+      initiate: false
     }
   };
   local.value.node = {
@@ -428,8 +466,9 @@ function showLocalTunnelClick(key: string) {
   if (key === "localTunnel") local.value.tunnel.show = true;
   else if (key === "localNode") local.value.node.show = true;
 }
+
 // 添加本地隧道
-function addLocalTunnelClick () {
+function addLocalTunnelClick() {
   const tunnelPath = path.join(process.cwd(), "data/tunnel.json");
   const data = JSON.parse(fs.readFileSync(tunnelPath, "utf-8"));
   local.value.tunnel.show = false;
@@ -439,6 +478,54 @@ function addLocalTunnelClick () {
   message.success(`已创建隧道 ${local.value.tunnel.args.tunnelName}`);
   getLocalTunnel();
 }
+
+// 删除本地隧道
+function deleteLocalTunnelClick(id: string) {
+  id = id.toString();
+  try {
+    const data = JSON.parse(fs.readFileSync(localTunnelDataPath, "utf-8"));
+
+    data.tunnels = data.tunnels.filter((_tunnel: any) => _tunnel.tunnelId !== id);
+
+    fs.writeFileSync(localTunnelDataPath, JSON.stringify(data, null, 2), "utf-8");
+    message.success(`隧道 ${id} 已删除`);
+  } catch (error) {
+    message.error(`隧道 ${id} 删除失败: ${error}`);
+  }
+  tunnel.value.show = false;
+  getLocalTunnel();
+}
+
+// 修改本地隧道状态
+function availableLocalTunnelClick(id: string, available: boolean) {
+  const data = JSON.parse(fs.readFileSync(localTunnelDataPath, "utf-8"));
+  const _tunnel = data.tunnels.find((_tunnel: any) => _tunnel.tunnelId === id);
+  if (_tunnel) {
+    _tunnel.available = !available;
+    message.success(`隧道 ${id} ${!available ? '启用' : '禁用'}`);
+    fs.writeFileSync(localTunnelDataPath, JSON.stringify(data, null, 2), "utf-8");
+  } else {
+    message.error(`未找到隧道 ${id}`);
+  }
+  tunnel.value.show = false;
+  getLocalTunnel();
+}
+
+// 修改本地隧道启动状态
+function initiateLocalTunnelClick(id: string, initiate: boolean) {
+  const data = JSON.parse(fs.readFileSync(localTunnelDataPath, "utf-8"));
+  const _tunnel = data.tunnels.find((_tunnel: any) => _tunnel.tunnelId === id);
+  if (_tunnel) {
+    _tunnel.initiate = !initiate;
+    message.success(`隧道 ${id} ${!initiate ? '启动' : '关闭'}`);
+    fs.writeFileSync(localTunnelDataPath, JSON.stringify(data, null, 2), "utf-8");
+  } else {
+    message.error(`未找到隧道 ${id}`);
+  }
+  tunnel.value.show = false;
+  getLocalTunnel();
+}
+
 // 添加时选中本地节点
 function addLocalSelectedNode(key: any) {
   message.info(`已选择节点 ${key.nodeName}`);

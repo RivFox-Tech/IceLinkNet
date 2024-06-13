@@ -69,4 +69,7 @@ export default class initial {
             fs.close(1);
         }
     }
+    static setting() {
+        
+    }
 }

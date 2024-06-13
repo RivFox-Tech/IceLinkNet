@@ -3,46 +3,15 @@
     {
       "nodeName": "RivFox 北京服务器-1 ",
       "nodeId": "1717906969000",
-      "tunnelName": "MNA-72301212",
-      "tunnelId": "1717925646000",
+      "tunnelName": "MNA-80551570",
+      "tunnelId": "1718265141000",
       "tunnelType": "tcp",
       "localIp": "127.0.0.1",
-      "localPort": "123",
-      "remotePort": "38728",
-      "user": ""
-    },
-    {
-      "nodeName": "RivFox 北京服务器-1 ",
-      "nodeId": "1717906969000",
-      "tunnelName": "MNA-22563727123",
-      "tunnelId": "1717948396000",
-      "tunnelType": "tcp",
-      "localIp": "127.0.0.1",
-      "localPort": "123",
-      "remotePort": "56381",
-      "user": ""
-    },
-    {
-      "nodeName": "RivFox 北京服务器-1 ",
-      "nodeId": "1717906969000",
-      "tunnelName": "MNA-85341796",
-      "tunnelId": "1718029022000",
-      "tunnelType": "tcp",
-      "localIp": "127.0.0.1",
-      "localPort": "123",
-      "remotePort": "29962",
-      "user": ""
-    },
-    {
-      "nodeName": "RivFox 北京服务器-1 ",
-      "nodeId": "1717906969000",
-      "tunnelName": "MNA-79793500",
-      "tunnelId": "1718029161000",
-      "tunnelType": "udp",
-      "localIp": "127.0.0.1",
-      "localPort": "123",
-      "remotePort": "48276",
-      "user": ""
+      "localPort": "12345",
+      "remotePort": "40594",
+      "user": "",
+      "available": true,
+      "initiate": false
     }
   ]
 }

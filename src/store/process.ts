@@ -12,13 +12,13 @@ export const useProcess = defineStore<"logs", processState>({
         }
     }),
     actions: {
-        addRrocess(name: string, key: string) {
+        addProcess(name: string, key: string) {
             this.process[name] = key;
         },
-        removeRrocess(name: string) {
+        removeProcess(name: string) {
             delete this.process[name]
         },
-        hasRrocess(name: string): boolean {
+        hasProcess(name: string): boolean {
             return name in this.process
         }
     }
