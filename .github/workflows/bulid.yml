@@ -1,12 +1,12 @@
-name: Build and Package
+name: Build
 
 on:
   push:
     branches:
-      - bulid
+      - main
   pull_request:
     branches:
-      - bulid
+      - main
   workflow_dispatch:
 
 jobs:
@@ -39,6 +39,3 @@ jobs:
 
       - name: Build project
         run: npm run build
-
-      - name: Package Electron app
-        run: npm run electron:build
