@@ -7,6 +7,14 @@
       "nodePort": "7000",
       "nodeToken": "ConnectHayFrpTokenWelcomToUseOurCloudServiceDonttellyourtokentotheotherpeoplesbecauseyouwilllostyour",
       "nodeUser": "gcPUfBUsQHxayytx"
+    },
+    {
+      "nodeName": "awa",
+      "nodeId": "1718976755",
+      "nodeIp": "101.43.125.217",
+      "nodePort": "7000",
+      "nodeToken": "",
+      "nodeUser": ""
     }
   ]
 }

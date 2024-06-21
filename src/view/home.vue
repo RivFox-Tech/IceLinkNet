@@ -17,7 +17,8 @@
       </n-card>
     </n-modal>
     
-    <p>{{awas}}</p>
+    <p>{{logs}}</p>
+    <n-button @click="awa">123</n-button>
   </n-flex>
 </template>
 
@@ -28,12 +29,13 @@ import system from "../services/system.ts";
 import path from "node:path";
 import fs from "node:fs";
 import {useMessage} from "naive-ui";
+import {useLogs} from "../store/logs.ts"
 import {storeToRefs} from "pinia";
-import {useProcess} from "../store/process.ts";
 
-const awas = ref("");
+const { logs } = storeToRefs(useLogs())
 const downloadFrpc = ref(false);
 const downloadFrpcProgress = ref(0);
+
 let frpcName: string;
 
 initialFrpc();
@@ -58,10 +60,9 @@ function initialFrpc() {
   }
 }
 
-function awa() {
-  const { process } = storeToRefs(useProcess());
-  const processStore = useProcess();
+const awassa = ref("");
 
-  processStore.addProcess("", "")
+function awa() {
+  logs.value["all"] = "";
 }
 </script>

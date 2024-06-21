@@ -21,8 +21,8 @@ let win: BrowserWindow | null;
 // 创建窗口
 function createWindow() {
     win = new BrowserWindow({
-        title: "MoonNetwork",
-        icon: path.join(process.env.VITE_PUBLIC, "logo.ico"),
+        title: "IceLinkNet",
+        icon: path.join(process.env.VITE_PUBLIC, "logo.png"),
         webPreferences: {
             preload: path.join(__dirname, "preload.mjs"),
             nodeIntegration: true,
@@ -35,7 +35,10 @@ function createWindow() {
         frame: false,
         useContentSize: true,
     });
-    app.setAppUserModelId("MoonNetwork");
+    
+    win.webContents.openDevTools();
+    
+    app.setAppUserModelId("IceLinkNet");
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", (new Date).toLocaleString());
     })
@@ -130,7 +133,7 @@ app.whenReady().then(() => {
             createWindow()
         }
     });
-    tray.setToolTip("MoonNetwork");
+    tray.setToolTip("IceLinkNet");
     tray.setContextMenu(contextMenu);
     createWindow();
 })

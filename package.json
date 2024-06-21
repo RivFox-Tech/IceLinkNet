@@ -1,10 +1,10 @@
 {
-  "name": "moon_client",
+  "name": "ice_link_net",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "author": "RivFox",
-  "description": "MoonNetworkClient developed by RivFox",
+  "description": "IceLinkNetClient developed by RivFox",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build && electron-builder",

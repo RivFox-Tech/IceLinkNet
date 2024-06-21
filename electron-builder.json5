@@ -1,13 +1,13 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "com.rivfox.moonnetwork",
+  "appId": "com.iceln",
   "asar": true,
-  "productName": "MoonNetwork",
+  "productName": "IceLinkNet",
   "directories": {
     "output": "release/${version}"
   },
-  "icon": "/public/logo.icon",
+  "icon": "/public/logo.png",
   "files": [
     "dist",
     "dist-electron"
@@ -19,7 +19,7 @@
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
   },
   "win": {
-    "icon": "/public/logo.icon",
+    "icon": "/public/logo.png",
     "target": [
       {
         "target": "nsis",

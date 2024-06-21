@@ -7,7 +7,7 @@
             <n-layout style="height: 100%">
               <n-layout-header position="absolute" style="-webkit-app-region: drag;" bordered>
                 <div style="display: flex; justify-content: space-between; height: 40px">
-                  <p style="margin-left: 12px; margin-top: 9px">MoonNetwork</p>
+                  <p style="margin-left: 12px; margin-top: 9px">IceLinkNet</p>
                   <n-flex style="-webkit-app-region: no-drag; margin-right: 12px; margin-top: -1px">
                     <n-button :focusable="false" @click="minimize" class="draggable-button" text>
                       <template #icon>

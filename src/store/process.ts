@@ -1,25 +1,12 @@
-import { defineStore } from "pinia"
+import {defineStore} from "pinia"
 
 interface processState {
-    process: Record<string, string>
+    process: Record<string, number>
 }
 
-export const useProcess = defineStore<"logs", processState>({
-    id: "logs",
+export const useProcess = defineStore<"process", processState>({
+    id: "process",
     state: () => ({
-        process: {
-            "213": ""
-        }
-    }),
-    actions: {
-        addProcess(name: string, key: string) {
-            this.process[name] = key;
-        },
-        removeProcess(name: string) {
-            delete this.process[name]
-        },
-        hasProcess(name: string): boolean {
-            return name in this.process
-        }
-    }
+        process: {}
+    })
 })
