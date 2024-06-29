@@ -1,4 +1,4 @@
-# MoonNetwork Client
+# Ice Link Net Client
 
 这是一个方便管理 Frpc 与 Mnbc 的客户端, 支持安装其他插件 \
 方便使用服务商的服务 跨平台!
